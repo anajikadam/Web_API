@@ -12,12 +12,12 @@ def hello_world():
 # http://127.0.0.1:5000/GetAPIs
 @app.route('/GetAPIs',methods=['GET'])
 def GetData():
-    data = {'GetOverall':'http://127.0.0.1:5000/GetOverall'
-            , 'GetDate':'http://127.0.0.1:5000/GetDate'
-            , 'GetCountryList': 'http://127.0.0.1:5000/GetCountryList'
-            , 'GetCountryReport': 'http://127.0.0.1:5000/GetCountryReport?CountryName=US'
-            , 'GetLatestCountryReport': 'http://127.0.0.1:5000/GetLatestCountryReport?CountryName=US'
-            , 'GetLatestCountryReport with Date (before 4 days)': 'http://127.0.0.1:5000/GetLatestCountryReport?CountryName=INDIA&Date(m/d/yy)=4/3/21'
+    data = {'GetOverall':'https://covid-webapi.herokuapp.com/GetOverall'
+            , 'GetDate':'https://covid-webapi.herokuapp.com/GetDate'
+            , 'GetCountryList': 'https://covid-webapi.herokuapp.com/GetCountryList'
+            , 'GetCountryReport': 'https://covid-webapi.herokuapp.com/GetCountryReport?CountryName=US'
+            , 'GetLatestCountryReport': 'https://covid-webapi.herokuapp.com/GetLatestCountryReport?CountryName=US'
+            , 'GetLatestCountryReport with Date (before 4 days)': 'https://covid-webapi.herokuapp.com/GetLatestCountryReport?CountryName=INDIA&Date(m/d/yy)=4/3/21'
             }
     return jsonify({'success': True, 'message': "SUCCESS"
                     ,'data':data, 'status': 200})

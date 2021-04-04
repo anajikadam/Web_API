@@ -63,6 +63,22 @@ class Covid():
         cntrys = list(set(df['Country/Region']))
         return total_cntry, cntrys
     
+    #get overall wordlwide total for confirmed, recovered and dead cases
+    def GetPeakDataOverAll(df):
+        df1 = df.iloc[:,4:].sum()
+        frame = { 'index': df1.index, 'sum': df1.values }
+        df = pd.DataFrame(frame)
+        max_pt = df['sum'].max()
+        max_pt_date = df[df['sum']==max_pt]['index'].values[0]
+        return max_pt, max_pt_date
+
+    #get max rate  for country
+    def GetPeakDate(data,cntry):
+        df = data[data['Country/Region']==cntry]
+        max_pt = df.max(axis = 1).values[0]
+        max_pt_date = df.eq(df.max(1), axis=0).dot(df.columns).values[0]
+        return max_pt, max_pt_date
+
     date_conf = get_Date(covid_conf)
     date_dead = get_Date(covid_dead)
     date_recv = get_Date(covid_recv)

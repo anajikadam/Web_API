@@ -4,31 +4,34 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 
+text1 = 'Hello, World! <br><br> <a href="https://covid-webapi.herokuapp.com/GetAPIs">Get APIs Link...</a>'
+text2 = 'Hello, World! <br><br> <a href="http://127.0.0.1:5000/GetAPIs">Get APIs Link...</a>'
 @app.route('/')
-def hello_world():     
-#     return 'Hello, World!!!... <br><br> <a href="http://127.0.0.1:5000/GetAPIs">Get APIs Link...</a>'
-    return 'Hello, World! <br><br> <a href="https://covid-webapi.herokuapp.com/GetAPIs">Get APIs Link...</a>'
+def hello_world():
+    return text1
 
-
-
-# data = {'GetOverall':'http://127.0.0.1:5000/GetOverall'
-#     , 'GetDate':'http://127.0.0.1:5000/GetDate'
-#     , 'GetCountryList': 'http://127.0.0.1:5000/GetCountryList'
-#     , 'GetCountryReport': 'http://127.0.0.1:5000/GetCountryReport?CountryName=US'
-#     , 'GetLatestCountryReport': 'http://127.0.0.1:5000/GetLatestCountryReport?CountryName=US'
-#     , 'GetLatestCountryReport with Date (before 4 days)': 'http://127.0.0.1:5000/GetLatestCountryReport?CountryName=INDIA&Date(m/d/yy)=4/3/21'
-#     }
-
+data1 = {'GetOverall':'http://127.0.0.1:5000/GetOverall'
+        , 'GetDate':'http://127.0.0.1:5000/GetDate'
+        , 'GetCountryList': 'http://127.0.0.1:5000/GetCountryList'
+        , 'GetCountryReport': 'http://127.0.0.1:5000/GetCountryReport?CountryName=US'
+        , 'GetLatestCountryReport': 'http://127.0.0.1:5000/GetLatestCountryReport?CountryName=US'
+        , 'GetLatestCountryReport with Date (before 4 days)': 'http://127.0.0.1:5000/GetLatestCountryReport?CountryName=INDIA&Date(m/d/yy)=4/3/21'
+        , 'GetLastCountryReport': 'http://127.0.0.1:5000/GetLastCountryReport'
+        , 'GetLatestStateReport': 'http://127.0.0.1:5000/GetLatestStateReport?StateNameName=Mahar'
+        }
+data2 = {'GetOverall':'https://covid-webapi.herokuapp.com/GetOverall'
+        , 'GetDate':'https://covid-webapi.herokuapp.com/GetDate'
+        , 'GetCountryList': 'https://covid-webapi.herokuapp.com/GetCountryList'
+        , 'GetCountryReport': 'https://covid-webapi.herokuapp.com/GetCountryReport?CountryName=US'
+        , 'GetLatestCountryReport': 'https://covid-webapi.herokuapp.com/GetLatestCountryReport?CountryName=US'
+        , 'GetLatestCountryReport with Date (before 4 days)': 'https://covid-webapi.herokuapp.com/GetLatestCountryReport?CountryName=INDIA&Date(m/d/yy)=4/3/21'
+        , 'GetLastCountryReport': 'https://covid-webapi.herokuapp.com/GetLastCountryReport'
+        , 'GetLatestStateReport': 'https://covid-webapi.herokuapp.com/GetLatestStateReport?StateNameName=Mahar'
+        }
 # http://127.0.0.1:5000/GetAPIs
 @app.route('/GetAPIs',methods=['GET'])
 def GetData():
-    data = {'GetOverall':'https://covid-webapi.herokuapp.com/GetOverall'
-                , 'GetDate':'https://covid-webapi.herokuapp.com/GetDate'
-                , 'GetCountryList': 'https://covid-webapi.herokuapp.com/GetCountryList'
-                , 'GetCountryReport': 'https://covid-webapi.herokuapp.com/GetCountryReport?CountryName=US'
-                , 'GetLatestCountryReport': 'https://covid-webapi.herokuapp.com/GetLatestCountryReport?CountryName=US'
-                , 'GetLatestCountryReport with Date (before 4 days)': 'https://covid-webapi.herokuapp.com/GetLatestCountryReport?CountryName=INDIA&Date(m/d/yy)=4/3/21'
-                }
+    data = data2
     return jsonify({'success': True, 'message': "SUCCESS"
                     ,'data':data, 'status': 200})
 
@@ -125,6 +128,30 @@ def GetLatestCountryReport():
                     ,'Country Name': spc_cntry
                     ,'Coordinates ': {'Latitude': str(Lat),'Longitude': str(Long)}
                     ,'data':data, 'status': 200})  
+
+# 'http://127.0.0.1:5000/GetLastCountryReport'
+@app.route('/GetLastCountryReport',methods=['GET'])
+def GetLastCountryReport():
+    from Data1 import Covid1
+    
+    data1 = Covid1.GetOverAllInfo()
+    data = data1
+    return jsonify({'success': True, 'message': "SUCCESS"
+                    , 'metaData':'Overall Cases Report for India from mygov.in'
+                    ,'data':data, 'status': 200}) 
+
+# http://127.0.0.1:5000/GetLatestStateReport?StateNameName=Mahar
+@app.route('/GetLatestStateReport',methods=['GET'])
+def GetLatestStateReport():
+    stateName = request.args.get('StateNameName', 'Maharashtra')
+    from Data1 import Covid1
+    df =  Covid1.GetStateWiseData()
+    data1 = Covid1.GetStateReport(df, stateName)
+    data = data1
+    return jsonify({'success': True, 'message': "SUCCESS"
+                    , 'metaData':'Overall Cases Report for '+data['State']+' from mygov.in'
+                    ,'data':data, 'status': 200}) 
+
 
 if __name__=="__main__":
     app.run(debug=True)

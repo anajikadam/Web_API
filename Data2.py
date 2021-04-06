@@ -5,16 +5,18 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 class Covid2():
-    global url, df11,df22,data1, date1
+    global url, df11,df22,data1, date1, soup
     url = 'https://www.grainmart.in/news/covid-19-coronavirus-india-state-and-district-wise-tally/'
-
+    sources = requests.get(url)
+    print(sources)
+    soup = BeautifulSoup(sources.content,"html.parser")
     def GetCovidTotal():
-        sources = requests.get(url)
-        print(sources) 
-        if sources.status_code!=200:
-            return 'url data not available'
-        #parsing the whole page
-        soup = BeautifulSoup(sources.content,"html.parser")
+        # sources = requests.get(url)
+        # print(sources) 
+        # if sources.status_code!=200:
+        #     return 'url data not available'
+        # #parsing the whole page
+        # soup = BeautifulSoup(sources.content,"html.parser")
         # looping over each card in a single page  
         for i in soup.findAll('div',{'class':'col col-sm contact-section'}):
             date = i.text
@@ -58,12 +60,12 @@ class Covid2():
         Last_Cases = []
         Last_Cured = []
         Last_Deaths = []
-        sources = requests.get(url)
-        print(sources) 
-        if sources.status_code!=200:
-            return 'url data not available'
-        #parsing the whole page
-        soup = BeautifulSoup(sources.content,"html.parser")
+        # sources = requests.get(url)
+        # print(sources) 
+        # if sources.status_code!=200:
+        #     return 'url data not available'
+        # #parsing the whole page
+        # soup = BeautifulSoup(sources.content,"html.parser")
         # looping over each card in a single page
         for card in soup.findAll( 'section',{"id":"covid-19-table"}):   
             for i in card.findAll('div',{'class':'skgm-td state-td'}):
@@ -112,12 +114,12 @@ class Covid2():
         Last_Cases = []
         Last_Cured = []
         Last_Deaths = []
-        sources = requests.get(url)
-        print(sources)
-        if sources.status_code!=200:
-            return 'url data not available'
-        #parsing the whole page
-        soup = BeautifulSoup(sources.content,"html.parser")
+        # sources = requests.get(url)
+        # print(sources)
+        # if sources.status_code!=200:
+        #     return 'url data not available'
+        # #parsing the whole page
+        # soup = BeautifulSoup(sources.content,"html.parser")
         # looping over each card in a single page
         for card in soup.findAll( 'div',{"class":"skgm-districts"}):   
             for i in card.findAll('div',{'class':'skgm-tr'}):
